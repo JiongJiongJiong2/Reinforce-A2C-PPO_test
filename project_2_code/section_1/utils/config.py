@@ -1,6 +1,6 @@
 import argparse
 import torch
-import gym
+import gymnasium as gym
 
 # https://github.com/ShangtongZhang/DeepRL/blob/master/deep_rl/utils/config.py
 class Config:

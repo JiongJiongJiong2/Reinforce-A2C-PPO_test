@@ -55,7 +55,15 @@ class GaussianPolicyNet(nn.Module):
         '''
         ##############################################################
         ############### YOUR CODE HERE - 6-8 lines ###################
-
+        import torch
+        from torch.distributions import Normal
+        features = self.actor_body(obs)
+        mean = torch.tanh(self.fc_action(features))
+        std = F.softplus(self.std)
+        dist = Normal(mean, std)
+        action = dist.sample()
+        log_prob = dist.log_prob(action).sum(dim=-1, keepdim=True)
+        entropy = dist.entropy().sum(dim=-1, keepdim=True)
         ##############################################################
         ######################## END YOUR CODE #######################
         return {'action': action,
@@ -88,7 +96,14 @@ class CategoricalPolicyNet(nn.Module):
         '''
         ##############################################################
         ############### YOUR CODE HERE - 6-8 lines ###################
-
+        import torch
+        from torch.distributions import Categorical
+        features = self.actor_body(obs)
+        logits = self.fc_action(features)
+        dist = Categorical(logits=logits)
+        action = dist.sample()
+        log_prob = dist.log_prob(action).unsqueeze(-1)
+        entropy = dist.entropy().unsqueeze(-1)
         ##############################################################
         ######################## END YOUR CODE #######################
         return {'action': action,
@@ -126,7 +141,17 @@ class GaussianActorCriticNet(nn.Module):
         '''
         ##############################################################
         ############### YOUR CODE HERE - 8-10 lines ##################
-
+        import torch
+        from torch.distributions import Normal
+        actor_features = self.actor_body(obs)
+        mean = torch.tanh(self.fc_action(actor_features))
+        std = F.softplus(self.std)
+        dist = Normal(mean, std)
+        action = dist.sample()
+        log_prob = dist.log_prob(action).sum(dim=-1, keepdim=True)
+        entropy = dist.entropy().sum(dim=-1, keepdim=True)
+        critic_features = self.critic_body(obs)
+        v = self.fc_critic(critic_features)
         ##############################################################
         ######################## END YOUR CODE #######################
         return {'action': action,
@@ -164,7 +189,16 @@ class CategoricalActorCriticNet(nn.Module):
         '''
         ##############################################################
         ############### YOUR CODE HERE - 8-10 lines ##################
-
+        import torch
+        from torch.distributions import Categorical
+        actor_features = self.actor_body(obs)
+        logits = self.fc_action(actor_features)
+        dist = Categorical(logits=logits)
+        action = dist.sample()
+        log_prob = dist.log_prob(action).unsqueeze(-1)
+        entropy = dist.entropy().unsqueeze(-1)
+        critic_features = self.critic_body(obs)
+        v = self.fc_critic(critic_features)
         ##############################################################
         ######################## END YOUR CODE #######################
         return {'action': action,

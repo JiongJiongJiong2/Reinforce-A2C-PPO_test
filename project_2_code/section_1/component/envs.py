@@ -1,7 +1,6 @@
-
-
-from gym.spaces.box import Box
-from gym.spaces.discrete import Discrete
+import gymnasium as gym
+from gymnasium.spaces.box import Box
+from gymnasium.spaces.discrete import Discrete
 
 from utils import *
 
@@ -10,29 +9,31 @@ from utils import *
 def make_env(env_id, seed):
     random_seed(seed)
     env = gym.make(env_id)
-    env.seed(seed)
-    env = OriginalReturnWrapper(env)
+    env = OriginalReturnWrapper(env, seed)
     return env
 
 
 class OriginalReturnWrapper(gym.Wrapper):
-    def __init__(self, env):
+    def __init__(self, env, seed=None):
         gym.Wrapper.__init__(self, env)
         self.total_rewards = 0
+        self.seed = seed
 
     def step(self, action):
-        obs, reward, done, info = self.env.step(action)
+        obs, reward, terminated, truncated, info = self.env.step(action)
+        done = terminated or truncated
         self.total_rewards += reward
         if done:
             info['episodic_return'] = self.total_rewards
             self.total_rewards = 0
-            obs = self.env.reset()
+            obs, _ = self.env.reset(seed=self.seed)
         else:
             info['episodic_return'] = None
         return obs, reward, done, info
 
-    def reset(self):
-        return self.env.reset()
+    def reset(self, **kwargs):
+        obs, _ = self.env.reset(**kwargs)
+        return obs
 
 
 

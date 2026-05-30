@@ -159,14 +159,46 @@ class MDPModel(nn.Module):
 
             ## TODO 1: Calculate \hat{G}, \hat{A}, \hat{V} in the pseudocode for the N samples in the batch
             ##         Note that \hat{\pi} in the pseudocode is simply batch_action_prob 
-            
+            N_samples = batch_state.shape[0]
+            with torch.no_grad():
+                V_hat = self.forward_baseline(batch_state).squeeze(-1)  # V(s) for all states
+                # Compute Monte Carlo returns (G_hat) from rewards
+                G_hat = torch.zeros(N_samples)
+                G = 0
+                for i in reversed(range(N_samples)):
+                    G = batch_reward[i] + GAMMA * G * (1 - batch_terminated[i])
+                    G_hat[i] = G
+                A_hat = G_hat - V_hat  # Advantage = MC return - V(s)
 
             for _ in range(self.M):
-                pass
                 ## TODO 2: Sample a minibatch of size MINIBATCH_SIZE from the batch of size N
+                indices = torch.randint(0, N_samples, (MINIBATCH_SIZE,))
+                mb_state = batch_state[indices]
+                mb_action = batch_action[indices]
+                mb_G_hat = G_hat[indices]
+                mb_A_hat = A_hat[indices]
+                mb_action_prob = batch_action_prob[indices]  # old policy prob
+
                 ## TODO 3: Calculate the policy (\pi_\theta) update objective over the minibatch
+                # Get current policy probabilities
+                curr_probs = self(mb_state)  # shape: (B, n_actions)
+                # Current probability of taken actions
+                curr_prob = curr_probs[torch.arange(mb_state.shape[0]), mb_action]
+                # Ratio r_t(theta) = pi_theta(a|s) / pi_theta_old(a|s)
+                ratio = curr_prob / mb_action_prob
+                # PPO-Clip objective
+                clip_ratio = torch.clamp(ratio, 1 - EPS, 1 + EPS)
+                policy_obj = -torch.min(ratio * mb_A_hat, clip_ratio * mb_A_hat).mean()
+
                 ## TODO 4: Calculate the value (V_\phi) update objective over the minibatch
+                V_pred = self.forward_baseline(mb_state).squeeze(-1)
+                value_loss = F.mse_loss(V_pred, mb_G_hat)
+
                 ## TODO 5: Update policy and value
+                total_loss = policy_obj + value_loss
+                self.optimizer.zero_grad()
+                total_loss.backward()
+                self.optimizer.step()
 
                
 

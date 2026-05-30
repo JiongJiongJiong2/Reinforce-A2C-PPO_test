@@ -40,7 +40,14 @@ class REINFORCEAgent(BaseAgent):
         '''
         #############################################################
         ############### YOUR CODE HERE - 3-5 lines ##################
-
+        rewards = storage.reward
+        masks = storage.mask
+        returns = []
+        G = 0
+        for r, mask in zip(reversed(rewards), reversed(masks)):
+            G = r + config.discount * G * mask
+            returns.insert(0, G)
+        storage.ret = returns
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -55,7 +62,7 @@ class REINFORCEAgent(BaseAgent):
         '''
         #############################################################
         ############### YOUR CODE HERE - 1-2 lines ##################
-        policy_loss =
+        policy_loss = -(entries.log_pi_a * entries.ret).mean()
         ##############################################################
         ######################## END YOUR CODE #######################
 

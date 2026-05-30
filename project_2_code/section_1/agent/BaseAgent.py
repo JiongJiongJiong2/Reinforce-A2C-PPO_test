@@ -40,7 +40,13 @@ class BaseAgent:
         '''
         #############################################################
         ############### YOUR CODE HERE - 6-8 lines ##################
-
+        ret = 0
+        done = False
+        while not done:
+            prediction = self.network(state)
+            action = to_np(prediction['action'])
+            state, reward, done, info = env.step(action)
+            ret += reward
         ##############################################################
         ######################## END YOUR CODE #######################
         return ret

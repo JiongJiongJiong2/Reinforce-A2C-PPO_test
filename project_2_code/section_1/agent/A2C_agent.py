@@ -52,8 +52,8 @@ class A2CAgent(BaseAgent):
                     that the episode terminates before sampling all these transitions. In that case instead of breaking the sampling loop, we 
                     continue sampling in a new episode [it is handled in envs.OriginalReturnWrapper.step()].
                     So now to make sure the computed returns are correct (as the data in storage can be from more than one episode), we need
-                    to keep track of terminal states in the memory. We have a variable called “mask” for each transition to identify terminal
-                    states and should be used to compute the correct return.) 
+                    to keep track of terminal states in the memory. We have a variable called "mask" for each transition to identify terminal
+                    states and should be used to compute the correct return.)
 
 
                 2. Compute the advantage function for each (state,action) visited in the stored rollout and store it
@@ -64,7 +64,18 @@ class A2CAgent(BaseAgent):
         '''
         #############################################################
         ############### YOUR CODE HERE - 5-7 lines ##################
-
+        rewards = storage.reward
+        masks = storage.mask
+        values = storage.v
+        ret_list = []
+        adv_list = []
+        G = returns
+        for i in reversed(range(len(rewards))):
+            G = rewards[i] + config.discount * G * masks[i]
+            ret_list.insert(0, G)
+            adv_list.insert(0, G - values[i].detach())
+        storage.ret = ret_list
+        storage.advantage = adv_list
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -80,8 +91,8 @@ class A2CAgent(BaseAgent):
         '''
         #############################################################
         ############### YOUR CODE HERE - 2-4 lines ##################
-        policy_loss =
-        value_loss =
+        policy_loss = -(entries.log_pi_a * entries.advantage).mean()
+        value_loss = 0.5 * (entries.ret - entries.v).pow(2).mean()
         ##############################################################
         ######################## END YOUR CODE #######################
 
