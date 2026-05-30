@@ -17,3 +17,6 @@ __pycache__/
 
 # PPO 输出图
 CartPole_output.png
+
+#输出的txt
+*.txt

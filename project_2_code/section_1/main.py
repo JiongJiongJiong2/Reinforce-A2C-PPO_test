@@ -56,9 +56,9 @@ def REINFORCE(**kwargs):
     config.discount = 0.99             # discount factor
     config.episode_length = 200        # max length of an episode for both Pendulum and CartPole-v0
     config.eval_episodes = 2           # number of episodes to evaluate agent
-    if config.game == "Pendulum-v0":
+    if config.game == "Pendulum-v1":
         config.max_steps = int(1e6)    # number of total steps for training
-    elif config.game == "CartPole-v0":
+    elif config.game == "CartPole-v1":
         config.max_steps = int(2e5)
 
 
@@ -98,10 +98,10 @@ def a2c(**kwargs):
     config.value_loss_weight = 1
     config.gradient_clip = 5
     config.eval_episodes = 2
-    if config.game == "Pendulum-v0":
+    if config.game == "Pendulum-v1":
         config.rollout_length = 64
         config.max_steps = int(1e6)
-    elif config.game == "CartPole-v0":
+    elif config.game == "CartPole-v1":
         config.rollout_length = 100
         config.max_steps = int(2e5)
 
@@ -123,8 +123,8 @@ if __name__ == '__main__':
     mkdir('log')
     mkdir('tf_log')
 
-    game = 'CartPole-v0'
-    # game = 'Pendulum-v0'
+    # game = 'CartPole-v0'
+    game = 'Pendulum-v1'
 
     t = get_time_str()
 

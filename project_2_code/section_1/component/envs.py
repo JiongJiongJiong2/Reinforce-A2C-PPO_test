@@ -59,9 +59,11 @@ class Task:
             assert 'unknown action space'
 
     def reset(self):
-        return self.env.reset()
+        state = self.env.reset()
+        return tensor(state)
 
     def step(self, actions):
         if isinstance(self.action_space, Box):
             actions = np.clip(actions, self.action_space.low, self.action_space.high)
-        return self.env.step(actions)
+        next_state, reward, done, info = self.env.step(actions)
+        return tensor(next_state), reward, done, info
