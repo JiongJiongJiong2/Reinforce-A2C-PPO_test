@@ -121,6 +121,10 @@ tensorboard --logdir=tf_log
 ```bash
 cd project_2_code\section_2
 python ppo.py --seed 0 --algorithm PPO --figure CartPole_PPO_output.png
+#or
+cd project_2_code\section_2
+python ppo.py --seed 0 --algorithm PPO --figure CartPole_PPO_output.png > output_ppo.txt 2>&1
+
 ```
 
 **输出重定向：**
@@ -138,6 +142,10 @@ cd project_2_code\section_2
 python ppo.py --seed 0 --algorithm PPO --figure CartPole_PPO_seed0.png
 python ppo.py --seed 1 --algorithm PPO --figure CartPole_PPO_seed1.png
 python ppo.py --seed 2 --algorithm PPO --figure CartPole_PPO_seed2.png
+
+python ppo.py --seed 0 --algorithm PPO --figure CartPole_PPO_output_seed0.png > output_ppo_seed0.txt 2>&1
+python ppo.py --seed 1 --algorithm PPO --figure CartPole_PPO_output_seed1.png > output_ppo_seed1.txt 2>&1
+python ppo.py --seed 2 --algorithm PPO --figure CartPole_PPO_output_seed2.png > output_ppo_seed2.txt 2>&1
 ```
 
 ### 2.3 PPO 超参数
