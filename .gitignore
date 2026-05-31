@@ -1,0 +1,32 @@
+# macOS 系统残留（必须屏蔽，引发错误的罪魁祸首）
+__MACOSX/
+.DS_Store
+
+# 深度匹配所有训练产生的数据和日志文件夹（无论在哪个子目录下）
+**/log/
+**/tf_log/
+**/data/
+
+# 深度匹配 Python 缓存
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Cline 机器人的规则文件（如果你不想传的话）
+.clinerules
+
+# 模型文件与编译文件
+*.model
+*.stats
+*.pth
+*.pt
+*.pkl
+
+# 过滤所有的输出图片、PDF和报告
+*.png
+*.pdf
+
+# 过滤指定目录或所有目录下的输出 txt
+**/output_*.txt
+**/output.txt
+project_2_code/section_2/*.txt
