@@ -1,5 +1,5 @@
 
-from component import *
+from ..component import *
 from .BaseAgent import *
 
 

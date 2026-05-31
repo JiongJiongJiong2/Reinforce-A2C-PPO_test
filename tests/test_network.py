@@ -3,10 +3,6 @@ Tests for network modules in section_1/component/network.py
 """
 import pytest
 import torch
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'project_2_code', 'section_1'))
 
 from project_2_code.section_1.component.network import (
     FCBody,

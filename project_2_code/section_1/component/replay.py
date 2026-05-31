@@ -1,5 +1,5 @@
 
-from utils import *
+from ..utils import *
 from collections import namedtuple
 
 #  adapted from https://github.com/ShangtongZhang/DeepRL/blob/master/deep_rl/utils/reply.py

@@ -5,9 +5,8 @@ import sys
 import os
 import pytest
 
-# Add project paths to sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'project_2_code', 'section_1'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'project_2_code', 'section_2'))
+# Add project root to sys.path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import torch
 import gymnasium as gym

@@ -2,7 +2,7 @@ import gymnasium as gym
 from gymnasium.spaces.box import Box
 from gymnasium.spaces.discrete import Discrete
 
-from utils import *
+from ..utils import *
 
 
 # adapted from https://github.com/ikostrikov/pytorch-a2c-ppo-acktr/blob/master/envs.py
