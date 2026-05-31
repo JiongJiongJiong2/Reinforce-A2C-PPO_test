@@ -10,7 +10,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # 1. 设置缓存机制（加速后续的依赖安装）
+    # 1. 设置缓存机制（使用更稳妥的锁定文件形式）
     - name: Cache Conda env
       uses: actions/cache@v4
       with:
@@ -19,21 +19,22 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-conda-
 
-    # 2. 社区标准方法：初始化 Conda 环境
+    # 2. 初始化 Conda 环境，并明确要求安装 python 和 pip
     - name: Setup Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
         python-version: '3.10.20'
-        activate-environment: introRL-torch # 自动激活该环境
+        activate-environment: introRL-torch
         auto-update-conda: true
 
-    # 3. 安装依赖（只有当 requirements.txt 变化时才会真正重新下载）
+    # 3. 安装依赖（确保使用刚安装的专用 pip）
     - name: Install dependencies
-      shell: bash -l {0} # 必须加上这一行，确保 Conda 环境在当前 Step 生效
+      shell: bash -l {0}
       run: |
-        # 如果缓存没命中，或者你想确保最新，直接执行安装
+        # 稳妥起见，先在 conda 环境里确保有 pip
+        conda install pip flake8 pytest -y
+        # 再用该环境的 pip 安装项目的 requirements
         pip install -r requirements.txt
-        conda install flake8 pytest -y
 
     # 4. 代码检查
     - name: Lint with flake8
