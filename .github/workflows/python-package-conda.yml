@@ -41,8 +41,8 @@ jobs:
       shell: bash -l {0}
       run: |
         # 显式排除虚拟环境、缓存等可能包含二进制或 null 字节的文件夹
-        flake8 . --count --exclude=.venv,venv,env,.git,__pycache__,.pytest_cache,build,dist --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 . --count --exit-zero --exclude=.venv,venv,env,.git,__pycache__,.pytest_cache,build,dist --max-complexity=10 --max-line-length=127 --statistics
+        flake8 . --count --exclude=.venv,venv,env,.git,__pycache__,.pytest_cache,build,dist,__MACOSX --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --exit-zero --exclude=.venv,venv,env,.git,__pycache__,.pytest_cache,build,dist,__MACOSX --max-complexity=10 --max-line-length=127 --statistics
 
     # 5. 运行测试
     - name: Test with pytest
