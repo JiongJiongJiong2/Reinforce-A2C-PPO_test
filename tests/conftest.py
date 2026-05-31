@@ -12,6 +12,13 @@ import torch
 import gymnasium as gym
 
 
+@pytest.fixture(autouse=True)
+def create_log_dirs():
+    """Create log directories before tests."""
+    os.makedirs('./log', exist_ok=True)
+    os.makedirs('./tf_log', exist_ok=True)
+
+
 @pytest.fixture
 def set_cpu_device():
     """Force CPU device for testing."""

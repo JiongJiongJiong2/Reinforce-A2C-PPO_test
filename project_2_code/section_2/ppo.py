@@ -15,6 +15,22 @@ import argparse
 import imageio
 
 
+##### Shared parameters between DQN and PPO #####
+MINIBATCH_SIZE = 128      # the B in the pseudocode
+GAMMA = 0.99
+LR = 1e-4
+N = 1024
+M = 32
+
+##### DQN-specific parameters #####
+EPS_START = 0.9
+EPS_END = 0.01
+EPS_DECAY = 500           # decay rate of epsilon (the larger the slower decay)
+TAU = 0.01                # the update rate of the target network
+
+##### PPO-specific parameters #####
+EPS = 0.1
+
 
 def set_seed(seed):
     random.seed(seed)                   # Python random module
@@ -322,28 +338,13 @@ if __name__ == "__main__":
     parser.add_argument("--figure", type=str, required=False, default="CartPole_output.png")
     args = parser.parse_args()
 
-    ##### Shared parameters between DQN and PPO #####
-    MINIBATCH_SIZE = 128      # the B in the pseudocode
-    GAMMA = 0.99
-    LR = 1e-4
+    # Override N and M based on algorithm
     if args.algorithm == "DQN" or args.algorithm == "RAND": 
        N = 4
        M = 4
     elif args.algorithm == "PPO": 
-       N = 1024                # the N in the pseudocode
-       M = 32                  # the M in the pseudocode
-
-
-    ##### DQN-specific parameters #####
-    EPS_START = 0.9
-    EPS_END = 0.01
-    EPS_DECAY = 500           # decay rate of epsilon (the larger the slower decay)
-    TAU = 0.01                # the update rate of the target network 
-
-
-    ##### PPO-specific parameters #####
-    EPS = 0.1
-    
+       N = 1024
+       M = 32
 
     train(args)
 
